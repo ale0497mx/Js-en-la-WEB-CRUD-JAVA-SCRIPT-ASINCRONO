@@ -1,0 +1,34 @@
+import { clientservice } from "../service/client-servise.js";
+
+const formulario = document.querySelector("[data-form]");
+
+const obtenerInfo = async () => {
+    const url = new URL(window.location);
+    const id = url.searchParams.get('id');
+
+    if(id == null){
+        window.location.href = "/screens/error.html";
+    }
+
+    const nombre = document.querySelector("[data-nombre]");
+    const email = document.querySelector("[data-email]");
+    const perfil = await clientservice.detalleCliente(id)
+        nombre.value = perfil.nombre;
+        email.value = perfil.email;
+    
+}
+
+obtenerInfo();
+
+formulario.addEventListener("submit", (evento) => {
+    evento.preventDefault();
+    const url = new URL(window.location);
+    const id = url.searchParams.get('id');
+
+    const nombre = document.querySelector("[data-nombre]").value;
+    const email = document.querySelector("[data-email]").value;
+    clientservice.actualizarCliente(nombre, email, id).then(() => {
+        window.location.href = "/screens/edicion_concluida.html";
+    });
+
+})
